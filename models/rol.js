@@ -11,10 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Rol.hasOne(models.Personal, {
-        foreignKey: 'rolId',
-        as: 'personal'
-      })
+      Rol.hasOne(models.Usuario, {foreignKey: 'rolId'})
     }
   }
   Rol.init({
@@ -22,6 +19,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Rol',
+    tableName: 'rol',
+    timestamps: false,
   });
   return Rol;
 };

@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+    .container(style="margin-top:25px")
+        .row
+            .col
+                .card
+                    .card-header
+                        h1= title
+                    .card-body
+                        .row
+                            .col
+                                form.row.g-3(action="./", method="POST")
+
+                                    .col-md-6 
+                                        label.form-label(for="nombre") Nombre:
+                                        input.form-control(type="text",required ,name="nombre")
+                                    
+                                    .col-md-6
+                                        label.form-label(for="apellido") Apellido:
+                                        input.form-control(type="text",required,name="apellido") 
+                                    
+                                    .col-md-6
+                                        label.form-label(for="email") Email:
+                                        input.form-control(type="email",required,name="email")
+                                    
+                                    .col-md-6
+                                        label.form-label(for="password") Password:
+                                        input.form-control(type="password",required, name="password") 
+                                    
+                                    .col-md-12.text-center
+                                        a.btn.btn-danger.btn-lg.me-2(href= '/') Cancelar
+                                        input.btn.btn-primary.btn-lg(type="submit",value="Registrar")

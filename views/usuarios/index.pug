@@ -1,0 +1,32 @@
+extends ../layout  
+block content 
+    .container(style="margin-top:25px")
+        .row 
+            .col-md-6
+                h1= title
+            .col-md-6.text-end
+                a.btn.btn-success.btn-lg(href="/usuarios/crear") Crear 
+        .row 
+            table.table.table-success.table-striped
+                thead
+                    tr
+                        th Apellido
+                        th Nombre
+                        th Email
+                        th Creacion
+                        th Rol
+                        th Acciones
+                tbody
+                    each usuario in usuarios
+                        tr
+                            td= usuario.apellido
+                            td= usuario.nombre
+                            td= usuario.email
+                            td= usuario.getFormattedDate(usuario.creacion)
+                            td= usuario.Rol.cargo
+                            td
+                                a.btn.btn-primary.btn-sm(href="/usuarios/${usuario.id}/edit") Editar
+                                a.btn.btn-danger.btn-sm(href="/usuarios/${usuario.id}/delete") Eliminar
+                    else 
+                        tr
+                            td(colspan="6") No hay datos
