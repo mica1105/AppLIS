@@ -1,0 +1,61 @@
+extends ../layout
+
+block content
+    .container(style="margin-top:25px")
+        .row
+            .col
+                .card
+                    .card-header
+                        h1= title
+                    .card-body
+                        .row
+                            .col
+                                - var url = paciente ? paciente.id+"?_method=PUT" : "";
+                                form.row.g-3(action="./"+url, method="POST")
+
+                                    .col-md-6 
+                                        label.form-label(for="nombre") Nombre:
+                                        input.form-control(type="text",required ,name="nombre", value=paciente ? paciente.nombre : "")
+                                    
+                                    .col-md-6
+                                        label.form-label(for="apellido") Apellido:
+                                        input.form-control(type="text",required,name="apellido", value=paciente ? paciente.apellido : "")
+
+                                    .col-md-6
+                                        label.form-label(for="dni") DNI:
+                                        input.form-control(type="number",required,name="dni", value=paciente ? paciente.dni : "") 
+                                    
+                                    .col-md-6
+                                        label.form-label(for="fechaNac") Fecha de Nacimiento:
+                                        input.form-control(type="date",required,name="fechaNac",value=paciente ? paciente.fechaNac : "")
+                                    
+                                    .col-md-6
+                                        label.form-label(for="telefono") N° de Telefono:
+                                        input.form-control(type="number",required,name="telefono",value=paciente ? paciente.telefono: "")
+                                    
+                                    .col-md-6
+                                        label.form-label(for="sexo") Sexo:
+                                        select.form-select(name="sexo", required)
+                                            each val in ["Masc","Fem"]
+                                                if(paciente && paciente.sexo == val)
+                                                    option(value=paciente.sexo,selected="true") #{paciente.sexo}
+                                                else
+                                                    option(value= val) #{val}
+                                    
+                                    .col-md-6
+                                        label.form-label(for="email") Email:
+                                        input.form-control(type="email",required,name="email",value=paciente? paciente.email : "") 
+
+                                    if(paciente)
+                                        .col-md-6
+                                            label.form-label(for="password") Password:
+                                            a.btn.btn-success.form-control(href='/pacientes/pass/'+paciente.id) Cambiar Password
+                                        
+                                    else  
+                                        .col-md-6
+                                            label.form-label(for="password") Password:
+                                            input.form-control(type="password",required, name="password")
+
+                                    .col-md-12.text-center
+                                        a.btn.btn-danger.btn-lg.me-2(href= paciente ? '/pacientes/' : '/') Cancelar
+                                        input.btn.btn-primary.btn-lg(type="submit",value=paciente ? "Actualizar" : "Registrar")

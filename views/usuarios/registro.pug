@@ -10,24 +10,30 @@ block content
                     .card-body
                         .row
                             .col
-                                form.row.g-3(action="./", method="POST")
+                                - var url = usuario ? usuario.id+"?_method=PUT" : "";
+                                form.row.g-3(action="./"+url, method="POST")
 
                                     .col-md-6 
                                         label.form-label(for="nombre") Nombre:
-                                        input.form-control(type="text",required ,name="nombre")
+                                        input.form-control(type="text",required ,name="nombre", value=usuario ? usuario.nombre : "")
                                     
                                     .col-md-6
                                         label.form-label(for="apellido") Apellido:
-                                        input.form-control(type="text",required,name="apellido") 
+                                        input.form-control(type="text",required,name="apellido", value=usuario ? usuario.apellido : "") 
                                     
                                     .col-md-6
                                         label.form-label(for="email") Email:
-                                        input.form-control(type="email",required,name="email")
+                                        input.form-control(type="email",required,name="email",value=usuario ? usuario.email : "")
                                     
-                                    .col-md-6
-                                        label.form-label(for="password") Password:
-                                        input.form-control(type="password",required, name="password") 
-                                    
+                                    if(usuario)
+                                        .col-md-6
+                                            label.form-label(for="password") Password:
+                                            a.btn.btn-success.form-control(href='/usuarios/pass/'+usuario.id) Cambiar Password
+                                    else  
+                                        .col-md-6
+                                            label.form-label(for="password") Password:
+                                            input.form-control(type="password",required, name="password")
+
                                     .col-md-12.text-center
-                                        a.btn.btn-danger.btn-lg.me-2(href= '/') Cancelar
-                                        input.btn.btn-primary.btn-lg(type="submit",value="Registrar")
+                                        a.btn.btn-danger.btn-lg.me-2(href= usuario ? '/usuarios/' : '/') Cancelar
+                                        input.btn.btn-primary.btn-lg(type="submit",value=usuario ? "Actualizar" : "Registrar")

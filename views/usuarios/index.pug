@@ -5,7 +5,7 @@ block content
             .col-md-6
                 h1= title
             .col-md-6.text-end
-                a.btn.btn-success.btn-lg(href="/usuarios/crear") Crear 
+                a.btn.btn-primary.btn-lg(href="/usuarios/crear") Crear 
         .row 
             table.table.table-success.table-striped
                 thead
@@ -15,7 +15,9 @@ block content
                         th Email
                         th Creacion
                         th Rol
-                        th Acciones
+                        th(colspan="2")  Acciones
+                
+                        
                 tbody
                     each usuario in usuarios
                         tr
@@ -23,10 +25,13 @@ block content
                             td= usuario.nombre
                             td= usuario.email
                             td= usuario.getFormattedDate(usuario.creacion)
-                            td= usuario.Rol.cargo
+                            td= usuario.Rol.descripcion
                             td
-                                a.btn.btn-primary.btn-sm(href="/usuarios/${usuario.id}/edit") Editar
-                                a.btn.btn-danger.btn-sm(href="/usuarios/${usuario.id}/delete") Eliminar
+                                form(action="/usuarios/"+usuario.id, method="get")
+                                    input.btn.btn-success(value="Actualizar",type="submit")
+                            td
+                                form(action="/usuarios/"+usuario.id+"?_method=DELETE", method="post")
+                                    input.btn.btn-danger(value="Borrar",type="submit")
                     else 
                         tr
                             td(colspan="6") No hay datos

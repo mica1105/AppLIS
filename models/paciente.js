@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Usuario extends Model {
+  class Paciente extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,11 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Usuario.belongsTo(models.Rol);
-      Usuario.hasMany(models.Orden);
-      Usuario.hasMany(models.Resultado);
-      Usuario.hasMany(models.Examen);
-      Usuario.hasMany(models.Muestra, {as: 'receptor'});
+      Paciente.hasMany(models.Resultado);
+      Paciente.hasMany(models.Orden);
     }
     getFormattedDate(fecha) {
       const date = new Date(fecha);
@@ -25,14 +22,30 @@ module.exports = (sequelize, DataTypes) => {
       return `${day}/${month}/${year}`;
     }
   }
-  Usuario.init({
-    apellido: {
-      type: DataTypes.STRING, 
+  Paciente.init({
+    dni: {
+      type: DataTypes.INTEGER, 
       allowNull: false,
     },
     nombre: {
       type: DataTypes.STRING, 
       allowNull: false,
+    },
+    apellido: {
+      type: DataTypes.STRING, 
+      allowNull: false,
+    },
+    fechaNac: {
+      type: DataTypes.DATE, 
+      allowNull: false,
+    },
+    sexo:  {
+      type: DataTypes.STRING, 
+      allowNull: false
+    },
+    telefono: {
+      type: DataTypes.INTEGER, 
+      allowNull: false
     },
     email:  {
       type: DataTypes.STRING, 
@@ -43,14 +56,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING, 
       allowNull: false
     },
-    creacion: DataTypes.DATE,
-    modificacion: DataTypes.DATE,
-    rolId: DataTypes.INTEGER  }, {
+   }, {
     sequelize,
-    modelName: 'Usuario',
-    tableName: 'usuario',
-    createdAt: 'creacion',
-    updatedAt: 'modificacion',
+    modelName: 'Paciente',
+    tableName: 'paciente',
+    timestamps: false,
   });
-  return Usuario;
+  return Paciente;
 };

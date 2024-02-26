@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+    .container(style="margin-top:10px")
+        .row.d-flex.justify-content-center
+            .col-lg-6.shadow-lg.p-2.mb-5
+                div.card.card-custom.border-white.border-0
+                    div.card-custom-img(style="background-image: url(http://res.cloudinary.com/d3/image/upload/c_scale,q_auto:good,w_1110/trianglify-v1-cs85g_cc5d2i.jpg);")
+                        div.card-custom-avatar
+                            img.img-fluid(src="/images/imgPerfil.png" alt="Avatar")
+                            h1.text-center= title
+                    div.card-body(style="overflow-y: auto")
+                        if (mensaje)
+                            div.alert.alert-success.d-flex.align-items-center(role="alert") 
+                                i.fa.fa-check-circle-o.fa-2x 
+                                    span=   mensaje
+                        form.form-horizontal.justify-content-center
+                            div.form-group.mb-3.row
+                                label.col-sm-4.col-form-label.form-control-lg(for="nombre") Nombre:
+                                div.col-sm-8
+                                    input.form-control-plaintext.form-control-lg(type="text", value=usuario.nombre, readonly)   
+                            div.form-group.mb-3.row
+                                label.col-sm-4.col-form-label.form-control-lg(for="email") Email:
+                                div.col-sm-8
+                                    input.form-control-plaintext.form-control-lg(type="email", value=usuario.email, readonly)
+                            div.form-group.mb-3.row
+                                label.col-sm-4.col-form-label.form-control-lg(for="fechaCreacion") Cuenta Creada:
+                                div.col-sm-8
+                                    input.form-control-plaintext.form-control-lg(type="text",value=usuario.getFormattedDate(usuario.creacion), readonly)
+                    div.card-footer.d-grid.gap-2.d-md-flex.justify-content-md-center
+                        a.btn.btn-danger(href="/listas/") Cancelar
+                        form(action="/usuarios/"+usuario.id, method="get")
+                            input.btn.btn-success(value="Actualizar",type="submit")

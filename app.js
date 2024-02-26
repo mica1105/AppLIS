@@ -7,7 +7,9 @@ var logger = require('morgan');
 var methodOverride = require('method-override');
 
 var indexRouter = require('./routes/index');
-var usuarioRouter = require('./routes/usuario');
+var usuariosRouter = require('./routes/usuarios');
+var pacientesRouter = require('./routes/pacientes');
+var authRouter = require('./routes/auth');
 
 var app = express();
 
@@ -28,7 +30,9 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/usuarios', usuarioRouter);
+app.use('/auth', authRouter);
+app.use('/usuarios', usuariosRouter);
+app.use('/pacientes', pacientesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
