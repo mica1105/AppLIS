@@ -11,28 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Examen.belongsTo(models.Referecia);
-      Examen.belongsTo(models.Analisis);
-      Examen.belongsTo(models.Orden);
+      Examen.hasMany(models.Determinacion);
       Examen.belongsToMany(models.Orden,{through: 'Detalle'});
       Examen.hasMany(models.Detalle);
     }
   }
   Examen.init({
-    dato: DataTypes.STRING,
-    valor: DataTypes.DOUBLE,
-    referenciaId: DataTypes.INTEGER,
-    medida: DataTypes.STRING,
-    estado:DataTypes.BOOLEAN,
-    fecha: DataTypes.DATE,
-    analisisId: DataTypes.INTEGER,
-    usuarioId: DataTypes.INTEGER,
+    nombre: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Examen',
-    tableName:'examen',
-    createdAt: 'fecha',
-    updatedAt: false,
+    tableName: 'examen',
+    timestamps: false,
   });
   return Examen;
 };

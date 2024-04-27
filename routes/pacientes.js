@@ -8,6 +8,8 @@ router.get('/',estaAutenticado, PacienteController.listar);
 
 router.get('/perfil',estaAutenticado, PacienteController.perfil);
 
+router.post('/buscar',estaAutenticado, PacienteController.buscar);
+
 router.get('/crear',estaAutenticado, PacienteController.formCrear);
 
 router.post('/',estaAutenticado, PacienteController.agregar);

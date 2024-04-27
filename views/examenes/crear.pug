@@ -1,0 +1,128 @@
+extends ../layout
+
+block content
+    .container(style="margin-top:25px")
+        .row.justify-content-center
+            .col-md-8
+                .card
+                    .card-header
+                        h1= title
+                    .card-body
+                        .row
+                            .col
+                                - var url = examen ? examen.id+"?_method=PUT" : "";
+                                form.row.g-3(action="./"+url, method="POST")
+
+                                    .col-md-12
+                                        label.form-label(for="nombre") Nombre de Examen:
+                                        input.form-control(type="text",required ,name="nombre", value=examen ? examen.nombre : "")
+                                    .col-md-12.text-end
+                                        a.btn.btn-danger.me-2(href= '/examenes/') Cancelar
+                                        input.btn.btn-success.me-2(type="submit",value=examen ? "Actualizar" : "Registrar")
+                        .row.g-3
+                            .col-md-6
+                                h3 Determinaciones 
+                            if(examen)
+                                .col-md-6
+                                    button.btn.btn-primary(data-bs-toggle="modal", data-bs-target="#detModal", data-bs-id=examen.id) Agregar 
+                            .col-md-12
+                                table.table.table-success.table-striped
+                                    thead
+                                        tr
+                                            th Dato
+                                            th Medida
+                                            th(colspan="4") Valores de Referencia
+                                            th Acciones
+                                    tbody
+                                        if(determinaciones)
+                                            each det in determinaciones
+                                                tr
+                                                    td= det.dato
+                                                    td= det.medida    
+                                                    td(colspan="4") 
+                                                            ul
+                                                                each ref in det.Referencia 
+                                                                        if(ref.edad != null)
+                                                                            li En #{ref.edad} , valor min: #{ref.min} #{det.medida} , valor max: #{ref.max} #{det.medida}
+                                                                        if(ref.sexo != null)
+                                                                            li En sexo {ref.sexo}, valor min: #{ref.min} #{det.medida}, valor max: #{ref.max} #{det.medida}
+                                                                        if(ref.edad == null && ref.sexo == null)
+                                                                            li Valor min: #{ref.min} #{det.medida}, valor max: #{ref.max} #{det.medida}
+                                                                        else
+                                                                            li En #{ref.edad} y sexo #{ref.sexo}, valor min: #{ref.min} #{det.medida}, valor max: #{ref.max} #{det.medida}
+                                                    td
+                                                        button.btn.btn-primary(data-bs-toggle="modal", data-bs-target="#refModal", data-bs-id=det.id) Agregar Referencia 
+                                            else 
+                                                td(colspan="7") No hay Determinaciones
+                                        else 
+                                            td(colspan="7") Crear Examen para Habilitar la Carga de Determinaciones 
+                    .card-footer.text-end
+                        a.btn.btn-danger(href= '/examenes/') Cerrar
+
+            .modal.fade(id= "detModal" tabindex="-1" aria-labelledby="detModalLabel" aria-hidden="true" data-bs-backdrop="static") 
+                .modal-dialog.modal-dialog-centered
+                    .modal-content
+                        .modal-header
+                            h3.modal-title Agregar Determinacion
+                        .modal-body
+                            form(action="/examenes/agregarDet", method="post")
+                                .row
+                                    input(type="hidden", name="examenId", id="examenId")
+                                    .col
+                                        label.form-label(for="dato") Dato:
+                                        input.form-control(type="text",required ,name="dato")
+                                        
+                                    .col
+                                        label.form-label(for="medida") Medida:
+                                        input.form-control(type="text",required ,name="medida")
+
+                                    .col-md-12.text-end
+                                        button.btn.btn-danger(data-bs-dismiss="modal") Cerrar
+                                        button.btn.btn-success(type="submit") Agregar
+            
+            .modal.fade(id= "refModal" tabindex="-1" aria-labelledby="refModalLabel" aria-hidden="true" data-bs-backdrop="static") 
+                .modal-dialog.modal-dialog-centered
+                    .modal-content
+                        .modal-header
+                            h3.modal-title Agregar Referencia
+                        .modal-body
+                            form(action="/examenes/agregarRef", method="post")
+                                .row
+                                    input(type="hidden", name="determinacionId", id="determinacionId")
+                                    .col
+                                        label.form-label(for="edad") Rango de Edad:
+                                        input.form-control(type="text",name="edad")
+                                    .col
+                                        label.form-label(for="sexo") Sexo:
+                                        select.form-select(name="sexo")
+                                            option(selected) Sin Referencia
+                                            each val in ["Masc","Fem"]
+                                                option(value= val) #{val}
+                                .row
+                                    br
+                                    .col
+                                        label.form-label(for="min") Valor Min:
+                                        input.form-control(type="number",step= "0.01",required,name="min")
+                                    
+                                    .col
+                                        label.form-label(for="max") Valor Max:
+                                        input.form-control(type="number",step= "0.01",required,name="max")
+
+                                .row.text-end
+
+                                    .col
+                                        button.btn.btn-danger.me-2(data-bs-dismiss="modal") Cerrar
+                                        button.btn.btn-success(type="submit") Agregar 
+    script. 
+        let detModal= document.getElementById('detModal')
+        let refModal= document.getElementById('refModal')
+        detModal.addEventListener('shown.bs.modal', function (event) {
+            let button = event.relatedTarget
+            let id = button.getAttribute('data-bs-id')
+            let inputEx = detModal.querySelector('.modal-body #examenId').value = id
+        })
+        refModal.addEventListener('shown.bs.modal', function (event) {
+            let button = event.relatedTarget
+            let id = button.getAttribute('data-bs-id')
+            let inputDet= refModal.querySelector('#determinacionId').value = id
+        })

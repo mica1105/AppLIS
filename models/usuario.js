@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       Usuario.belongsTo(models.Rol);
       Usuario.hasMany(models.Orden);
       Usuario.hasMany(models.Resultado);
-      Usuario.hasMany(models.Examen);
       Usuario.hasMany(models.Muestra, {as: 'receptor'});
     }
     getFormattedDate(fecha) {

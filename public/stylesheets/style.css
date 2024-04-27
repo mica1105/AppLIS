@@ -1,8 +1,8 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: #7cecd4;
-  background-image: url('../images/FONDO.jpg');
+  background: rgb(73,134,150);
+  background: radial-gradient(circle, rgba(73,134,150,1) 0%, rgba(9,53,121,1) 50%);
 }
 
 a {
@@ -73,3 +73,5 @@ a {
   top: 120px;
   right: 5rem;
 }
+
+

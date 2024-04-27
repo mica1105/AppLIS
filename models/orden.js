@@ -14,10 +14,17 @@ module.exports = (sequelize, DataTypes) => {
       Orden.belongsTo(models.Paciente);
       Orden.belongsTo(models.Usuario);
       Orden.belongsTo(models.Estado);
+      Orden.hasMany(models.Muestra);
+      Orden.hasMany(models.Resultado);
       Orden.belongsToMany(models.Examen,{through:'Detalle'});
       Orden.hasMany(models.Detalle);
-      Orden.belongsToMany(models.Resultado, {through:'Registro'});
-      Orden.hasMany(models.Registro);
+    }
+    getFormattedDate(fecha) {
+      const date = new Date(fecha);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate()+1;
+      return `${day}/${month}/${year}`;
     }
   }
   Orden.init({

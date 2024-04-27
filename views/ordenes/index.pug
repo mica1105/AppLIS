@@ -5,15 +5,13 @@ block content
             .col-md-4
                 h1= title
             .col-md-6
-                form(action="/pacientes/buscar", method="post")
+                form(action="/ordenes/buscar", method="post")
                     .input-group
                         .input-group-text
                             i.fa.fa-search
-                        input.form-control(type="text",placeholder="Buscar por dni", autocomplete="off", name="dni") 
+                        input.form-control(type="text", autocomplete="off", name="dato") 
                         .col-md-2.text-end
                             input.btn.btn-primary.btn-lg(type="submit", value="Buscar")   
-            .col-md-2.text-end
-                a.btn.btn-primary.btn-lg(href="/pacientes/crear") Crear 
         .row(style="margin-top:25px")
             .col-md-12  
                 if (mensaje)
@@ -29,34 +27,35 @@ block content
             table.table.table-success.table-striped
                 thead
                     tr
-                        th Apellido
-                        th Nombre
-                        th DNI
-                        th Feche de Nacimiento
-                        th Sexo 
-                        th Telefono
-                        th Email
+                        th Paciente
+                        th Personal 
+                        th Registro
+                        th Entrega
+                        th Medico
+                        th Diagnostico
+                        th Estado
                         th(colspan="3")  Acciones
                 
                         
                 tbody
-                    each paciente in pacientes
+                    each orden in ordenes
                         tr
-                            td= paciente.apellido
-                            td= paciente.nombre
-                            th= paciente.dni 
-                            td= paciente.getFormattedDate(paciente.fechaNac)
-                            td= paciente.sexo
-                            td= paciente.telefono
-                            td= paciente.email
-                            td                  
-                                a.btn.btn-primary(href="/ordenes/crear/"+paciente.id) Crear Orden
+                            td= orden.Paciente.nombre+" "+orden.Paciente.apellido
+                            td= orden.Usuario.nombre+" "+orden.Usuario.apellido
+                            th= orden.getFormattedDate(orden.fecha)
+                            td= orden.getFormattedDate(orden.fechaEntrega)
+                            td= orden.medico
+                            td= orden.diagnostico
+                            td= orden.Estado.descripcion
                             td
-                                form(action="/pacientes/"+paciente.id, method="get")
+                                form(action="/ordenes/actualizar/"+orden.id, method="get")
+                                    input.btn.btn-primary(value="Cargar Muestra",type="submit")
+                            td
+                                form(action="/ordenes/actualizar/"+ orden.id, method="get")
                                     input.btn.btn-success(value="Actualizar",type="submit")
                             td
-                                form(action="/pacientes/"+paciente.id+"?_method=DELETE", method="post")
+                                form(action="/ordenes/"+orden.id+"?_method=DELETE", method="post")
                                     input.btn.btn-danger(value="Borrar",type="submit")
                     else 
                         tr
-                            td(colspan="10") No hay datos
+                            td(colspan="9") No hay datos

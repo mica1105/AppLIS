@@ -10,22 +10,24 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Resultado.belongsTo(models.Paciente);
       Resultado.belongsTo(models.Usuario);
-      Resultado.belongsToMany(models.Orden, {through:'Registro'});
-      Resultado.hasMany(models.Registro);
+      Resultado.belongsTo(models.Detalle);
+      Resultado.belongsTo(models.Orden);
     }
   }
   Resultado.init({
-    pacienteId: DataTypes.INTEGER,
     usuarioId: DataTypes.INTEGER,
-    fecha: DataTypes.DATE
+    fecha: DataTypes.DATE,
+    modificacion: DataTypes.DATE,
+    valor: DataTypes.DOUBLE,
+    detalleId: DataTypes.INTEGER,
+    ordenId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Resultado',
     tableName: 'resultado',
     createdAt: 'fecha',
-    updatedAt: false,
+    updatedAt: 'modificacion',
   });
   return Resultado;
 };

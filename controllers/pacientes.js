@@ -31,6 +31,52 @@ exports.perfil= async (req,res)=>{
     });
 }
 
+exports.buscar= async (req,res)=>{
+    let email='';
+    if(req.session.usuario){
+        email=req.session.usuario;
+    } else {
+        email= req.user[0].email;
+    }
+    const usuario= await Usuario.findOne({where:{email: email}});
+    let dni= 0;
+    if(req.body.dni!== ""){
+        dni= req.body.dni;
+        const paciente = await Paciente.findOne({where:{dni: dni}});
+        if(paciente){
+            const pacientes=[];
+            pacientes.push(paciente);
+            res.render('./pacientes/', {
+                title: 'Gestion de paciente',
+                usuario: usuario,
+                pacientes:pacientes,
+                codigo: 'success',
+                mensaje: 'Paciente encontrado'   
+            });
+        }
+        const pacientes = await Paciente.findAll();
+        res.render('./pacientes/', {
+            title: 'Gestion de paciente',
+            usuario: usuario,
+            pacientes:pacientes,
+            codigo: 'error',
+            mensaje: 'Paciente no encontrado'    
+        });
+        
+    }
+    if(req.body.dni=== ""){
+        const pacientes = await Paciente.findAll();
+        res.render('./pacientes/', {
+            title: 'Gestion de paciente',
+            usuario: usuario,
+            pacientes:pacientes,
+            codigo: 'error',
+            mensaje: 'Ingrese el dni del paciente'    
+        });
+    }
+    
+}
+
 exports.formCrear= async (req, res) => {
     res.render('./pacientes/registro', {
         title: 'Crear paciente'

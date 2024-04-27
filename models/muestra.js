@@ -10,20 +10,26 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Muestra.belongsTo(models.TipoMuestra);
+      Muestra.belongsTo(models.Tipo);
       Muestra.belongsTo(models.Usuario);
-      Muestra.hasMany(models.Detalle);
+      Muestra.belongsTo(models.Orden);
+    }
+    getFormattedDate(fecha) {
+      return `${fecha.getDate().toString().padStart(2, '0')}-${(fecha.getMonth() + 1).toString().padStart(2, '0')}-${fecha.getFullYear()}`;
     }
   }
   Muestra.init({
-    tipoMuetraId: DataTypes.INTEGER,
+    tipoId: DataTypes.INTEGER,
     estado: DataTypes.BOOLEAN,
-    usuarioId: DataTypes.INTEGER
+    fecha: DataTypes.DATE,
+    usuarioId: DataTypes.INTEGER,
+    ordenId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Muestra',
     tableName: 'muestra',
-    timestamps: false,
+    createdAt: 'fecha',
+    updatedAt: false,
   });
   return Muestra;
 };

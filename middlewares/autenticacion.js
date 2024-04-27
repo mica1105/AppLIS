@@ -27,9 +27,6 @@ exports.verificaToken= async (req, res, next) => {
 };
 
 exports.esAdmin= async (req, res, next) => {
-    console.log('Usuario: '+req.session.usuario);
-    console.log('Rol: '+req.session.rol);
-    console.log('Token: '+ req.session.token);
     if(req.session.usuario && req.session.token && req.session.rol === 1){
             next();
     }else{

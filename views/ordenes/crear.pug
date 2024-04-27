@@ -1,0 +1,163 @@
+extends ../layout
+
+block content
+    .container(style="margin-top:25px")
+        .row.justify-content-center
+            .col-md-8
+                .card.text-center
+                    .card-header
+                        h1= title
+                    .card-body
+                        .row
+                            .col
+                                - var url = orden ? orden.id+"?_method=PUT" : "";
+                                form.row.g-3(action="/ordenes/"+url, method="POST")
+
+                                    .col.col-md-12 
+                                        label.form-label(for="paciente") Paciente:
+                                        input.form-control(type="text",required ,name="paciente", value=paciente.nombre + " " + paciente.apellido)
+                                        input(type="hidden", name="pacienteId", value=paciente.id)
+                                    
+                                    .col.col-md-6
+                                        label.form-label(for="medico") Medico:
+                                        input.form-control(type="text",required,name="medico", value=orden ? orden.medico : "")
+
+                                    .col.col-md-6
+                                        label.form-label(for="diagnostico") Diagnostico:
+                                        input.form-control(type="text",required,name="diagnostico", value=orden ? orden.diagnostico : "") 
+                                    
+                                    .col.col-md-12.text-center
+                                        a.btn.btn-danger.btn-lg.me-2(href= '/pacientes/') Cancelar
+                                        input.btn.btn-primary.btn-lg(type="submit",value=orden ? "Actualizar" : "Siguiente")
+                        .row.g-3
+                            .col-md-6
+                                h3 Muestras 
+                            if(orden)
+                                .col-md-6
+                                    button.btn.btn-primary(data-bs-toggle="modal", data-bs-target="#muestrasModal", data-bs-id=orden.id) Agregar 
+                            .col-md-12
+                                table.table.table-success.table-striped
+                                    thead
+                                        tr
+                                            th Código
+                                            th Tipo de Muestra
+                                            th Recogida
+                                            th Tomada por
+                                            th(colspan="3")  Acciones
+                                    tbody
+                                        if(muestras)
+                                            each muestra in muestras
+                                                tr
+                                                    td= muestra.id
+                                                    td= muestra.Tipo.descripcion
+                                                    td= muestra.getFormattedDate(muestra.fecha)
+                                                    td= muestra.Usuario.nombre+' '+muestra.Usuario.apellido
+                                                    td
+                                                        a.btn.btn-info(href= '#') Etiqueta    
+                                                    td
+                                                        button.btn.btn-success(data-bs-toggle="modal", data-bs-target="#muestrasModal", data-bs-muestra=muestra.id) Actualizar
+                                                    td
+                                                        form(action="/muestras/"+muestra.id+"?_method=DELETE", method="post")
+                                                            input.btn.btn-danger(value="Borrar",type="submit")
+                                            else 
+                                                td(colspan="7") No hay Muestras Cargadas
+                                        else 
+                                            td(colspan="7") Crear Orden para Habilitar la Carga de Muestras
+
+                        .row.g-3
+                            .col-md-6
+                                h3 Examenes 
+                            if(orden && muestras!= "")
+                                .col-md-6
+                                    button.btn.btn-primary(data-bs-toggle="modal", data-bs-target="#examenesModal", data-bs-id= orden.id) Agregar 
+                            .col-md-12
+                                table.table.table-success.table-striped
+                                    thead
+                                        tr
+                                            th Examen
+                                            th Determinaciones
+                                            th Acciones
+                                    tbody
+                                        if(detalles)
+                                            each detalle in detalles
+                                                
+                                                tr  
+                                                    td= detalle.Examen.nombre
+                                                    td 
+                                                        ul
+                                                            each determinacion in detalle.Examen.Determinacions
+                                                                li= determinacion.dato   
+                                                    td
+                                                        form(action="/detalles/"+detalle.id+"?_method=DELETE", method="post")
+                                                            input.btn.btn-danger(value="Borrar",type="submit")
+                                                            
+                                            else 
+                                                td(colspan="7") No hay Muestras Cargadas
+                                        else 
+                                            td(colspan="7") Crear Orden para Habilitar la Carga de Muestras
+                    .card-footer.text-end
+                        a.btn.btn-danger(href= '/ordenes/') Cerrar
+            
+        .modal.fade(id= "muestrasModal" tabindex="-1" aria-labelledby="muestrasModalLabel" aria-hidden="true" data-bs-backdrop="static") 
+            .modal-dialog.modal-dialog-centered
+                .modal-content
+                    .modal-header
+                        h3.modal-title Agregar Muestra
+                    .modal-body
+                        - var url = muestra ? muestra.id+"?_method=PUT" : "";
+                        form.row.g-3(action="/muestras/"+url, method="POST")
+                            .col-md-12
+                                h4 Cargar Muestra:
+                                input(type="hidden", name="ordenId", id="ordenId")
+                                
+                            .col-md-6
+                                label.form-label(for="tipoId") Tipo de Muestra:
+                                select.form-select(name="tipoId", required)
+                                    each tipoMuestra in tiposMuestras
+                                        if(muestra && muestra.tipoMuestraId == tipoMuestra.id)
+                                            option(value=tipoMuestra.id,selected="true") #{tipoMuestra.descripcion}
+                                        else
+                                            option(value=tipoMuestra.id) #{tipoMuestra.descripcion}
+                            
+                            .col-md-12
+                                input.btn-check(type="checkbox", name="estado",id="btn-check-outlined",value= muestra ? muestra.estado : false)
+                                label.btn.btn-outline-primary(for="btn-check-outlined") Recogida
+
+                            .col-md-12.text-end
+                                button.btn.btn-danger.me-2(data-bs-dismiss="modal") Cerrar
+                                button.btn.btn-success(type="submit") Agregar
+
+        .modal.fade(id= "examenesModal" tabindex="-1" aria-labelledby="examenesModalLabel" aria-hidden="true" data-bs-backdrop="static") 
+            .modal-dialog.modal-dialog-centered
+                .modal-content
+                    .modal-header
+                        h3.modal-title Agregar Examen 
+                    .modal-body
+                        form(action="/ordenes/detalles/crear", method="post")
+                            .row
+                                .col-md-12
+                                    input(type="hidden", name="ordenId", id="ordenId")
+                                .col-md-6
+                                    label.form-label(for="examenId") Examenes:
+                                    select.form-select(name="examenId", required)
+                                        each examen in todosExamenes
+                                            option(value=examen.id) #{examen.nombre}
+                            .row.text-end
+                                .col
+                                    button.btn.btn-danger.me-2(type= "button", data-bs-dismiss="modal") Cerrar
+                                    button.btn.btn-success(type="submit") Agregar 
+            
+
+        script.
+            let muestraModal= document.getElementById('muestrasModal')
+            muestraModal.addEventListener('show.bs.modal', function (event) {
+                let button = event.relatedTarget
+                let id = button.getAttribute('data-bs-id')
+                let inputOrden = muestraModal.querySelector('.modal-body #ordenId').value = id
+            })
+            let examenModal= document.getElementById('examenesModal')
+            examenModal.addEventListener('shown.bs.modal', function (event) {
+                let button = event.relatedTarget
+                let id = button.getAttribute('data-bs-id')
+                let inputDet= examenModal.querySelector('.modal-body #ordenId').value = id
+            })

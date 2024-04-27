@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Paciente.hasMany(models.Resultado);
       Paciente.hasMany(models.Orden);
     }
     getFormattedDate(fecha) {
