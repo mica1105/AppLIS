@@ -13,6 +13,7 @@ var authRouter = require('./routes/auth');
 var examenesRouter = require('./routes/examenes');
 var ordenesRouter = require('./routes/ordenes');
 var muestrasRouter = require('./routes/muestras');
+var resultadosRouter= require('./routes/resultados');
 
 var app = express();
 
@@ -39,6 +40,7 @@ app.use('/pacientes', pacientesRouter);
 app.use('/examenes', examenesRouter);
 app.use('/ordenes', ordenesRouter);
 app.use('/muestras', muestrasRouter);
+app.use('/resultados', resultadosRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

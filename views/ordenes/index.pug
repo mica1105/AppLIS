@@ -34,7 +34,7 @@ block content
                         th Medico
                         th Diagnostico
                         th Estado
-                        th(colspan="3")  Acciones
+                        th(colspan="4")  Acciones
                 
                         
                 tbody
@@ -47,15 +47,18 @@ block content
                             td= orden.medico
                             td= orden.diagnostico
                             td= orden.Estado.descripcion
-                            td
-                                form(action="/ordenes/actualizar/"+orden.id, method="get")
-                                    input.btn.btn-primary(value="Cargar Muestra",type="submit")
+                            td 
+                                a.btn.btn-info(href="/muestras/"+orden.id) Etiquetas
+                            td  
+                                a.btn.btn-primary(href="/resultados/gestion/"+orden.id) Resultados
                             td
                                 form(action="/ordenes/actualizar/"+ orden.id, method="get")
-                                    input.btn.btn-success(value="Actualizar",type="submit")
+                                    input.btn.btn-success(value="Modificar",type="submit")
                             td
                                 form(action="/ordenes/"+orden.id+"?_method=DELETE", method="post")
                                     input.btn.btn-danger(value="Borrar",type="submit")
                     else 
                         tr
                             td(colspan="9") No hay datos
+
+                            

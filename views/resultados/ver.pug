@@ -1,0 +1,85 @@
+extends ../layout
+
+block content
+    .container(style="margin-top:25px")
+        .row
+                .card
+                    .card-header
+                        h1= 'Resultados de '+ detalle.Examen.nombre+ ' Orden Nro: '+detalle.ordenId
+                    .card-body            
+                        .row
+                            table.table.table-borderless
+                                thead
+                                    tr
+                                        th Nro
+                                        th Determinacion
+                                        th Valor
+                                        th Unidad
+                                        th Referencia
+                                        th Acciones
+                                tbody
+                                    each resultado in resultados
+                                        tr  
+                                            td= resultado.id
+                                            td= resultado.Determinacion.dato
+                                            td= resultado.valor
+                                            td= resultado.Determinacion.medida
+                                            td
+                                                ul
+                                                    each ref in resultado.Determinacion.Referencia 
+                                                        if(ref.edad != null)
+                                                            li  En #{ref.edad} , valor min: #{ref.min}  , valor max: #{ref.max} 
+                                                        if(ref.sexo != null)
+                                                            li En sexo {ref.sexo}, valor min: #{ref.min}  valor max: #{ref.max} 
+                                                        if(ref.edad == null && ref.sexo == null)
+                                                            li Valor min: #{ref.min} , valor max: #{ref.max} 
+                                                        else
+                                                            li En #{ref.edad} y sexo #{ref.sexo}, valor min: #{ref.min} , valor max: #{ref.max} 
+                                            td
+                                                button.btn.btn-primary(data-bs-toggle="modal", data-bs-target="#editarModal", data-bs-id=resultado.id, data-bs-valor=resultado.valor, data-bs-det=resultado.Determinacion.dato) Editar
+                                            td
+                                                form(action='/resultados/ver/'+ resultado.id+"?_method=DELETE", method="post")
+                                                    input.btn.btn-danger(value="Eliminar",type="submit")
+                            .row
+                                .col-md-12.text-center
+                                    a.btn.btn-danger.btn-lg.me-2(href= orden ? '/resultados/gestion/'+detalle.ordenId : '/') Cancelar
+
+
+        .modal.fade(id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true" data-bs-backdrop="static") 
+            .modal-dialog.modal-dialog-centered
+                .modal-content
+                    .modal-header
+                        h3.modal-title Editar Valor
+                        button.btn-close(data-bs-dismiss="modal", aria-label="Close") 
+                    .modal-body
+                        form(action="/resultados/editar", method="POST")
+                            .mb-3
+                                input(type="hidden", name="resultadoId", id="resultadoId", required)
+                            .mb-3
+                                label.form-label(for="det") Determinacion: 
+                                input.form-control(type="text", name="det", id="det", required, readonly)
+                                br
+                            .mb-3
+                                label.form-label(for="valor") Valor: 
+                                input.form-control(type="text", name="valor", id="valor", required)
+
+                            .mb-3.text-end
+                                button.btn.btn-success(type="submit") Guardar
+            
+
+        script.
+            document.addEventListener('DOMContentLoaded', function() {
+                let editarModal = document.getElementById('editarModal')
+                editarModal.addEventListener('show.bs.modal', function(event) {
+                    let button = event.relatedTarget
+                    let id = button.getAttribute('data-bs-id')
+                    let valor = button.getAttribute('data-bs-valor')
+                    let det= button.getAttribute('data-bs-det')
+                    let inputResultadoId = editarModal.querySelector('.modal-body #resultadoId')
+                    let inputValor = editarModal.querySelector('.modal-body #valor')
+                    let inputDet = editarModal.querySelector('.modal-body #det')
+                    inputResultadoId.value = id
+                    inputValor.value = valor
+                    inputDet.value = det
+                })
+            })

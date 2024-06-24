@@ -16,6 +16,15 @@ block content
                                     .col-md-12
                                         label.form-label(for="nombre") Nombre de Examen:
                                         input.form-control(type="text",required ,name="nombre", value=examen ? examen.nombre : "")
+
+                                    .col-md-12
+                                        label.form-label(for="dispobible") Disponible:
+                                        select.form-select(name="dispobible")
+                                            each disponible in {{val: 1, text: "Si"}, { val: 0, text: "No"}}
+                                                if(examen && examen.disponible == disponible.val)
+                                                    option(value=disponible.val,selected="true") #{disponible.text}
+                                                else        
+                                                    option(value=disponible.val) #{disponible.text}
                                     .col-md-12.text-end
                                         a.btn.btn-danger.me-2(href= '/examenes/') Cancelar
                                         input.btn.btn-success.me-2(type="submit",value=examen ? "Actualizar" : "Registrar")
@@ -74,7 +83,7 @@ block content
                                         
                                     .col
                                         label.form-label(for="medida") Medida:
-                                        input.form-control(type="text",required ,name="medida")
+                                        input.form-control(type="text",name="medida")
 
                                     .col-md-12.text-end
                                         button.btn.btn-danger(data-bs-dismiss="modal") Cerrar

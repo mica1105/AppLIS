@@ -1,58 +1,19 @@
 extends ../layout  
 block content 
     .container(style="margin-top:25px")
-        .row 
+        .row
             .col-md-4
                 h1= title
-            .col-md-6
-                form(action="/muestras/buscar", method="post")
-                    .input-group
-                        .input-group-text
-                            i.fa.fa-search
-                        input.form-control(type="text", autocomplete="off", name="dato") 
-                        .col-md-2.text-end
-                            input.btn.btn-primary.btn-lg(type="submit", value="Buscar")   
-        .row(style="margin-top:25px")
-            .col-md-12  
-                if (mensaje)
-                    if(codigo=== 'success')
-                        div.alert.alert-success.d-flex.align-items-center(role="alert") 
-                            i.fa.fa-check-circle-o.fa-2x 
-                                span=   mensaje
-                    if(codigo === 'error')
-                        div.alert.alert-danger.d-flex.align-items-center(role="alert")              
-                            i.fa.fa-exclamation-triangle.fa-2x      
-                                span=   mensaje
-        .row 
-            table.table.table-success.table-striped
-                thead
-                    tr
-                        th Código
-                        th Paciente
-                        th Tipo de Muestra
-                        th Recogida
-                        th Tomada por
-                        th Orden
-                        th(colspan="2")  Acciones
-                tbody
-                    each muestra in muestras
-                        tr
-                            td= muestra.id
-                            td= muestra.Orden.Paciente.nombre + ' ' + muestra.Orden.Paciente.apellido
-                            td= muestra.TipoMuestra.tipo
-                            if(muestra.estado=== true){
-                                td= Si
-                            } else {
-                                td= No
-                            }
-                            td= muestra.Usuario.nombre+' '+muestra.Usuario.apellido
-                            td= muestra.ordenId
-                            td
-                                form(action="/muestras/actualizar/"+ muestra.id, method="get")
-                                    input.btn.btn-success(value="Actualizar",type="submit")
-                            td
-                                form(action="/muestras/"+ muestra.id+"?_method=DELETE", method="post")
-                                    input.btn.btn-danger(value="Borrar",type="submit")
-                    else 
-                        tr
-                            td(colspan="9") No hay datos
+        .row
+            if(muestras)
+                each muestra in muestras 
+                    .col-md-4
+                        div.card.text-center
+                            div.card-body
+                                h5.card-title Paciente: #{muestra.Orden.Paciente.nombre + ' ' + muestra.Orden.Paciente.apellido}
+                                h6.card-subtitle.mb-2.text-body-secondary DNI: #{muestra.Orden.Paciente.dni}
+                                h6.card-subtitle.mb-2.text-body-secondary Orden Nro: #{muestra.Orden.id}
+                                p.card-text Tipo de Muestra: #{muestra.Tipo.descripcion}
+                                p.card-text Fecha: #{muestra.getFormattedDate(muestra.fecha)}
+                                a.btn.btn-primary(href="/muestras/etiqueta/"+muestra.id) Imprimir
+                            

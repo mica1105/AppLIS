@@ -4,24 +4,37 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Resultado extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       Resultado.belongsTo(models.Usuario);
       Resultado.belongsTo(models.Detalle);
-      Resultado.belongsTo(models.Orden);
+      Resultado.belongsTo(models.Determinacion);
     }
   }
   Resultado.init({
-    usuarioId: DataTypes.INTEGER,
-    fecha: DataTypes.DATE,
-    modificacion: DataTypes.DATE,
-    valor: DataTypes.DOUBLE,
-    detalleId: DataTypes.INTEGER,
-    ordenId: DataTypes.INTEGER
+    usuarioId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    fecha: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    modificacion: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    detalleId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    determinacionId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    valor: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    }
   }, {
     sequelize,
     modelName: 'Resultado',

@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Examen.init({
-    nombre: DataTypes.STRING
+    nombre: DataTypes.STRING,
+    disponible: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Examen',

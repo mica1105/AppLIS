@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       Muestra.belongsTo(models.Tipo);
       Muestra.belongsTo(models.Usuario);
       Muestra.belongsTo(models.Orden);
+      Muestra.hasMany(models.Detalle);
     }
     getFormattedDate(fecha) {
       return `${fecha.getDate().toString().padStart(2, '0')}-${(fecha.getMonth() + 1).toString().padStart(2, '0')}-${fecha.getFullYear()}`;
@@ -23,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     estado: DataTypes.BOOLEAN,
     fecha: DataTypes.DATE,
     usuarioId: DataTypes.INTEGER,
-    ordenId: DataTypes.INTEGER
+    ordenId: DataTypes.INTEGER,
+    etiqueta: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Muestra',

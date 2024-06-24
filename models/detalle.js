@@ -12,12 +12,19 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Detalle.belongsTo(models.Examen);
       Detalle.belongsTo(models.Orden);
-      Detalle.hasOne(models.Resultado);
+      Detalle.belongsTo(models.Muestra);
+      Detalle.hasMany(models.Resultado);
     }
   }
   Detalle.init({
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     examenId: DataTypes.INTEGER,
     ordenId: DataTypes.INTEGER,
+    muestraId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Detalle',

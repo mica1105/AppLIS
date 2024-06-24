@@ -21,9 +21,9 @@ exports.listar= async (req, res) => {
     const usuario= await Usuario.findOne({where:{email: email}});
     const ordenes = await Orden.findAll({include: [Paciente,Usuario,Detalle,Estado]});
     res.render('./ordenes/', {
-        title: 'Gestion de paciente',
+        title: 'Gestion de Ordenes',
         usuario: usuario,
-        ordenes:ordenes
+        ordenes:ordenes,
     });
 };
 
@@ -45,6 +45,7 @@ exports.formCrear= async (req, res) => {
 exports.agregar= async (req, res) => {
     let fEntrega= new Date();
     fEntrega.setDate(fEntrega.getDate() + 5);
+    console.log(fEntrega);
     const usuario= await Usuario.findOne({where:{email: req.session.usuario}});
     const orden= await Orden.create({
         pacienteId: req.body.pacienteId,
@@ -63,7 +64,7 @@ exports.formActualizar= async (req, res) => {
     const orden= await Orden.findByPk(id);
     const detalles= await Detalle.findAll({where: {ordenId: id}, include: [{ model: Examen, include: [Determinacion] }]});
     const paciente= await Paciente.findByPk(orden.pacienteId);
-    const todosExamenes= await Examen.findAll({});
+    const todosExamenes= await Examen.findAll();
     const muestras= await Muestra.findAll({where: {ordenId: id}, include: [Tipo,Usuario]});
     const tipos= await Tipo.findAll();
     res.render('./ordenes/crear', {
@@ -83,21 +84,20 @@ exports.actualizar= async (req, res) => {
     await orden.update({
         pacienteId: req.body.pacienteId,
         usuarioId: usuario.id,
-        estadoId: 1,
         medico: req.body.medico,
-        diagnostico: req.body.diagnostico,
-        fechaEntrega: fEntrega
+        diagnostico: req.body.diagnostico
     });
-    res.redirect('./ordenes/actualizar/'+orden.id);
+    res.redirect('/ordenes/actualizar/'+orden.id);
 }
 
 exports.crearDetalle= async (req, res) => {
     const id= req.body.ordenId;
     const detalle= await Detalle.create({
         OrdenId: id,
-        ExamenId: req.body.examenId
+        ExamenId: req.body.examenId,
+        MuestraId: req.body.muestraId
     });
     await detalle.save();
-    res.redirect('./ordenes/actualizar/'+id);
+    res.redirect('/ordenes/actualizar/'+id);
 }
 

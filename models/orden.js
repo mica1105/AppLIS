@@ -15,7 +15,6 @@ module.exports = (sequelize, DataTypes) => {
       Orden.belongsTo(models.Usuario);
       Orden.belongsTo(models.Estado);
       Orden.hasMany(models.Muestra);
-      Orden.hasMany(models.Resultado);
       Orden.belongsToMany(models.Examen,{through:'Detalle'});
       Orden.hasMany(models.Detalle);
     }
