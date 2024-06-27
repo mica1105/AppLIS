@@ -10,30 +10,39 @@ block content
                     .card-body
                         .row
                             .col
-                                - var url = usuario ? usuario.id+"?_method=PUT" : "";
+                                - var url = usuarioM ? usuarioM.id+"?_method=PUT" : "";
                                 form.row.g-3(action="./"+url, method="POST")
 
                                     .col-md-6 
                                         label.form-label(for="nombre") Nombre:
-                                        input.form-control(type="text",required ,name="nombre", value=usuario ? usuario.nombre : "")
+                                        input.form-control(type="text",required ,name="nombre", value=usuarioM ? usuarioM.nombre : "")
                                     
                                     .col-md-6
                                         label.form-label(for="apellido") Apellido:
-                                        input.form-control(type="text",required,name="apellido", value=usuario ? usuario.apellido : "") 
+                                        input.form-control(type="text",required,name="apellido", value=usuarioM ? usuarioM.apellido : "") 
                                     
                                     .col-md-6
                                         label.form-label(for="email") Email:
-                                        input.form-control(type="email",required,name="email",value=usuario ? usuario.email : "")
+                                        input.form-control(type="email",required,name="email",value=usuarioM ? usuarioM.email : "")
                                     
-                                    if(usuario)
+                                    if(usuarioM)
                                         .col-md-6
                                             label.form-label(for="password") Password:
-                                            a.btn.btn-success.form-control(href='/usuarios/pass/'+usuario.id) Cambiar Password
+                                            input.form-control(type="password",required, name="password", value= usuarioM.password, readonly)
                                     else  
                                         .col-md-6
                                             label.form-label(for="password") Password:
                                             input.form-control(type="password",required, name="password")
 
+                                    .col-md-6
+                                        label.form-label(for="rol") Rol:
+                                        select.form-select(name="rol", required)
+                                            each rol in roles
+                                                if(usuarioM && usuarioM.rolId == rol.id)
+                                                    option(value=rol.id, selected="true") #{rol.descripcion}
+                                                else
+                                                    option(value= rol.id) #{rol.descripcion}
+
                                     .col-md-12.text-center
-                                        a.btn.btn-danger.btn-lg.me-2(href= usuario ? '/usuarios/' : '/') Cancelar
-                                        input.btn.btn-primary.btn-lg(type="submit",value=usuario ? "Actualizar" : "Registrar")
+                                        a.btn.btn-danger.btn-lg.me-2(href= usuarioM ? '/usuarios/' : '/') Cancelar
+                                        input.btn.btn-primary.btn-lg(type="submit",value=usuarioM ? "Actualizar" : "Registrar")

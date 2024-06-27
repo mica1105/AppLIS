@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     examenId: DataTypes.INTEGER,
     ordenId: DataTypes.INTEGER,
-    muestraId: DataTypes.INTEGER
+    muestraId: DataTypes.INTEGER,
+    validado: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Detalle',

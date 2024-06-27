@@ -12,46 +12,46 @@ html(lang="es")
     .container-fluid.px-0
       nav.navbar.fixed-top.navbar-expand-lg.navbar-dark.bd-navbar.bg-dark
         .container
-          a.navbar-brand(href='/')
-            img.bi.me-2.h4(src="/images/logo.png", width="60", height="52", alt="Logo", aria-label="LIS")
-          if usuario
+          if (usuario || paciente)
+            a.navbar-brand(href= usuario ? '/usuarios/' : '/pacientes/inicio' )
+              img.bi.me-2.h4(src="/images/logo.png", width="60", height="52", alt="Logo", aria-label="LIS")
             button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target="#navbarNav", aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
               span.navbar-toggler-icon
             .collapse.navbar-collapse#navbarNav
               ul.navbar-nav.me-auto.mb-2.mb-lg-0
-                if usuario.rolId == 1
+                if (usuario && usuario.rolId == 1)
                   li.nav-item
                     a.nav-link.px-2.h6.me-2(href='/usuarios/')
                       i.fas.fa-users.fa-2x
-                      | Usuarios
-                if usuario.rolId != 4
+                      |  Usuarios 
                   li.nav-item
                     a.nav-link.px-2.h6.me-2(href='/pacientes/')
                       i.fas.fa-user-injured.fa-2x
-                      | Pacientes
+                      |  Pacientes
+                if usuario 
                   li.nav-item
                     a.nav-link.px-2.h6.me-2(href='/ordenes/')
                       i.fas.fa-file-medical-alt.fa-2x
-                      | Ordenes
+                      |  Ordenes
+                if (usuario && (usuario.rolId == 2 || usuario.rolId == 3))
                   li.nav-item
                     a.nav-link.px-2.h6.me-2(href='/examenes/')
                       i.fas.fa-microscope.fa-2x
-                      | Examenes
-                if usuario.rolId == 4
+                      |  Examenes
+                if paciente
                   li.nav-item
-                    a.nav-link.px-2.h6.me-2(href='/pacientes/perfil')
+                    a.nav-link.px-2.h6.me-2(href='/pacientes/inicio')
                       i.fas.fa-house.fa-2x
                       | Pantalla Inicial
-                  li.nav-item
-                    a.nav-link.px-2.h6.me-2(href='/pacientes/perfil')
-                      i.fas.fa-microscope.fa-2x
-                      | Resultados de Análisis
               div.text-end
-                a.btn.btn-outline-primary.me-2(href='/usuarios/perfil')
-                  i.fa.fa-user-circle.fa-2x
-                  | #{usuario.nombre}
                 a.btn.btn-outline-secondary(href='/auth/logout')
                   | Logout
+                a.btn.btn-outline-primary.me-2(href= usuario ? '/usuarios/perfil' : '/pacientes/perfil')
+                  i.fa.fa-user-circle.fa-2x
+                  | #{usuario ? usuario.nombre : paciente.nombre}
+          else
+            a.navbar-brand(href='/')
+              img.bi.me-2.h4(src="/images/logo.png", width="60", height="52", alt="Logo", aria-label="LIS")
       .b-example-divider
       .content-container           
         block content

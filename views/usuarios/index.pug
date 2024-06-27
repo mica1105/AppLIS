@@ -6,6 +6,17 @@ block content
                 h1= title
             .col-md-6.text-end
                 a.btn.btn-primary.btn-lg(href="/usuarios/crear") Crear 
+        .row
+            .col-md-12  
+                if (mensaje)
+                    if(codigo=== 'success')
+                        div.alert.alert-success.d-flex.align-items-center(role="alert") 
+                            i.fa.fa-check-circle-o.fa-2x 
+                                span=   mensaje
+                    if(codigo === 'error')
+                        div.alert.alert-danger.d-flex.align-items-center(role="alert")              
+                            i.fa.fa-exclamation-triangle.fa-2x      
+                                span=   mensaje
         .row 
             table.table.table-success.table-striped
                 thead

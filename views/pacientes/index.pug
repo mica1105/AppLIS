@@ -1,6 +1,6 @@
 extends ../layout  
 block content 
-    .container(style="margin-top:25px")
+    .container
         .row 
             .col-md-4
                 h1= title
@@ -14,7 +14,7 @@ block content
                             input.btn.btn-primary.btn-lg(type="submit", value="Buscar")   
             .col-md-2.text-end
                 a.btn.btn-primary.btn-lg(href="/pacientes/crear") Crear 
-        .row(style="margin-top:25px")
+        .row
             .col-md-12  
                 if (mensaje)
                     if(codigo=== 'success')

@@ -1,0 +1,31 @@
+extends ../layout  
+block content 
+    .container
+        .row.mt-5
+            .col-md-12
+                h1.display-2.text-center= title
+                h3.text-center Bienvenido al portal de pacientes. Aquí puedes ver tus órdenes de análisis de laboratorio y sus resultados.
+
+        .row.mt-4
+            .col-md-12
+                table.table.table-bordered
+                    thead
+                        tr
+                            th Orden ID
+                            th Fecha de Creación
+                            th Estado
+                            th Resultados
+                    tbody
+                        each orden in ordenes
+                            tr
+                                td= orden.id
+                                td= orden.getFormattedDate(orden.creacion)
+                                td= orden.Estado.descripcion
+                                td
+                                    if orden.estadoId == 5
+                                        a.btn.btn-info(href='/pacientes/resultados/'+orden.id)  Ver Resultados
+                                    else
+                                        span Aun no hay resultados cargados
+
+    
+

@@ -20,9 +20,9 @@ block content
                                     .col-md-12
                                         label.form-label(for="dispobible") Disponible:
                                         select.form-select(name="dispobible")
-                                            each disponible in {{val: 1, text: "Si"}, { val: 0, text: "No"}}
-                                                if(examen && examen.disponible == disponible.val)
-                                                    option(value=disponible.val,selected="true") #{disponible.text}
+                                            each disponible in [{val: 1, text: "Si"}, {val: 0, text: "No"}]
+                                                if (examen && examen.disponible == disponible.val)
+                                                    option(value=disponible.val, selected="true") #{disponible.text}
                                                 else        
                                                     option(value=disponible.val) #{disponible.text}
                                     .col-md-12.text-end

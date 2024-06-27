@@ -47,6 +47,7 @@ exports.formCrear= async (req, res) => {
 exports.agregarExamen= async (req, res) => {
     const examen= await Examen.create({
         nombre: req.body.nombre,
+        disponible: req.body.disponible
     });
     await examen.save();
     res.redirect('/examenes/' + examen.id);
@@ -67,7 +68,8 @@ exports.actualizar= async (req, res) => {
     const id= req.params.id;
     const examen= await Examen.findByPk(id);
     await examen.update({
-        nombre: req.body.nombre
+        nombre: req.body.nombre,
+        disponible: req.body.disponible
     });
     res.redirect('/examenes/' + examen.id);
 }

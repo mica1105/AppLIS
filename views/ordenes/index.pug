@@ -34,7 +34,7 @@ block content
                         th Medico
                         th Diagnostico
                         th Estado
-                        th(colspan="4")  Acciones
+                        th(colspan="3")  Acciones
                 
                         
                 tbody
@@ -43,20 +43,23 @@ block content
                             td= orden.Paciente.nombre+" "+orden.Paciente.apellido
                             td= orden.Usuario.nombre+" "+orden.Usuario.apellido
                             th= orden.getFormattedDate(orden.fecha)
-                            td= orden.getFormattedDate(orden.fechaEntrega)
+                            td= orden.getFormattedDate(orden.fechaResultado)
                             td= orden.medico
                             td= orden.diagnostico
-                            td= orden.Estado.descripcion
+                            td= orden.Estado.descripcion 
                             td 
-                                a.btn.btn-info(href="/muestras/"+orden.id) Etiquetas
-                            td  
-                                a.btn.btn-primary(href="/resultados/gestion/"+orden.id) Resultados
-                            td
-                                form(action="/ordenes/actualizar/"+ orden.id, method="get")
-                                    input.btn.btn-success(value="Modificar",type="submit")
-                            td
-                                form(action="/ordenes/"+orden.id+"?_method=DELETE", method="post")
-                                    input.btn.btn-danger(value="Borrar",type="submit")
+                                a.btn.btn-info(href="/muestras/"+orden.id) Muestras
+                            if(usuario && usuario.rolId === 1)
+                                td
+                                    form(action="/ordenes/actualizar/"+ orden.id, method="get")
+                                        input.btn.btn-success(value="Modificar",type="submit")
+                                td
+                                    form(action="/ordenes/"+orden.id+"?_method=DELETE", method="post")
+                                        input.btn.btn-danger(value="Borrar",type="submit")
+                            if(usuario && (usuario.rolId === 2 || usuario.rolId === 3))
+                                td  
+                                    a.btn.btn-primary(href="/resultados/gestion/"+orden.id) Resultados
+                                
                     else 
                         tr
                             td(colspan="9") No hay datos

@@ -15,5 +15,17 @@ block content
                                 h6.card-subtitle.mb-2.text-body-secondary Orden Nro: #{muestra.Orden.id}
                                 p.card-text Tipo de Muestra: #{muestra.Tipo.descripcion}
                                 p.card-text Fecha: #{muestra.getFormattedDate(muestra.fecha)}
-                                a.btn.btn-primary(href="/muestras/etiqueta/"+muestra.id) Imprimir
+                                p.card-text Estado: #{muestra.EstadoMuestra.descripcion}
+                                if(usuario && usuario.rolId === 1)
+                                    a.btn.btn-primary(href="/muestras/etiqueta/"+muestra.id)
+                                        i.fa-solid.fa-file-pdf 
+                                        |  Etiqueta
+                                if(usuario && (usuario.rolId === 2 || usuario.rolId === 3))
+                                    form(action="/muestras/"+muestra.id+"?_method=PUT", method="post")
+                                        if (muestra.EstadoMuestra.id === 1)
+                                            input(type="hidden", name="estado", value="2")
+                                            input.btn.btn-primary(type="submit", value= "Recogida")
+                                        if (muestra.EstadoMuestra.id === 2)
+                                            input(type="hidden", name="estado", value="3")
+                                            input.btn.btn-primary(type="submit", value= "Analizada")
                             

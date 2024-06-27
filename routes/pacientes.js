@@ -2,22 +2,27 @@ var express = require('express');
 var router = express.Router();
 var PacienteController = require('../controllers/pacientes');
 var estaAutenticado = require('../middlewares/autenticacion').verificaToken;
+var esAdmin = require('../middlewares/autenticacion').esAdmin;
 
 /* GET users listing. */
-router.get('/',estaAutenticado, PacienteController.listar);
+router.get('/',estaAutenticado, esAdmin , PacienteController.listar);
 
 router.get('/perfil',estaAutenticado, PacienteController.perfil);
 
-router.post('/buscar',estaAutenticado, PacienteController.buscar);
+router.get('/inicio',estaAutenticado, PacienteController.inicio);
 
-router.get('/crear',estaAutenticado, PacienteController.formCrear);
+router.get('/resultados/:id',estaAutenticado, PacienteController.resultados);
 
-router.post('/',estaAutenticado, PacienteController.agregar);
+router.post('/buscar',estaAutenticado, esAdmin, PacienteController.buscar);
 
-router.get('/:id',estaAutenticado, PacienteController.formActualizar);
+router.get('/crear',estaAutenticado,esAdmin, PacienteController.formCrear);
 
-router.put('/:id',estaAutenticado, PacienteController.actualizar);
+router.post('/',estaAutenticado, esAdmin ,PacienteController.agregar);
 
-router.delete('/:id',estaAutenticado, PacienteController.borrar);
+router.get('/:id',estaAutenticado, esAdmin, PacienteController.formActualizar);
+
+router.put('/:id',estaAutenticado, esAdmin, PacienteController.actualizar);
+
+router.delete('/:id',estaAutenticado, esAdmin, PacienteController.borrar);
 
 module.exports = router;

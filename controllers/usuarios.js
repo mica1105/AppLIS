@@ -33,34 +33,44 @@ exports.perfil= async (req,res)=>{
 }
 
 exports.formCrear= async (req, res) => {
+    const roles= await Rol.findAll();
+    const usuario= await Usuario.findOne({where:{email: req.session.usuario}});
     res.render('./usuarios/registro', {
-        title: 'Crear Usuario'
+        title: 'Crear Usuario',
+        roles: roles,
+        usuario: usuario
     });
 };
 
 exports.agregar= async (req, res) => {
-    let rol= 1;
     const usuario= await Usuario.create({
         nombre: req.body.nombre,
         apellido: req.body.apellido,
         email: req.body.email,
         password: req.body.password,
-        rolId: rol
+        rolId: req.body.rol
     });
     const salt= await bcrypt.genSalt(10);
     usuario.password= await bcrypt.hash(usuario.password, salt);
+    const usuarios = await Usuario.findAll({include: [Rol]});
     await usuario.save();
-    res.render('./', {
-        success: 'success',
+    res.render('./usuarios/', {
+        title: 'Gestion de Usuario',
+        usuarios:usuarios,
+        codigo: 'success',
         mensaje: 'Usuario Creado'
     });
 };
 
 exports.formActualizar= async (req, res) => {
     const id= req.params.id;
-    const usuario= await Usuario.findByPk(id);
+    const roles= await Rol.findAll();
+    const usuario= await Usuario.findOne({where:{email: req.session.usuario}});
+    const usuarioM= await Usuario.findByPk(id);
     res.render('./usuarios/registro', {
         title: 'Actualizar Usuario',
+        roles: roles,
+        usuarioM: usuarioM,
         usuario: usuario
     });
 };
@@ -70,7 +80,8 @@ exports.actualizar= async (req, res) => {
     await Usuario.update({
         nombre: req.body.nombre,
         apellido: req.body.apellido,
-        email: req.body.email
+        email: req.body.email,
+        rolId: req.body.rol
     },{
         where: {id: id}
     });
@@ -79,6 +90,7 @@ exports.actualizar= async (req, res) => {
     res.render('./usuarios/', {
         title: 'Gestion de Usuario',
         usuarios:usuarios,
+        codigo: 'success',
         mensaje: 'Usuario NRO: '+ usuario.id +' Actualizado'
     });    
 }
@@ -91,6 +103,7 @@ exports.borrar= async (req, res) => {
     res.render('./usuarios/', {
         title: 'Gestion de Usuario',
         usuarios:usuarios,
+        codigo: 'error',
         mensaje: 'Usuario Borrado'
     });
 };

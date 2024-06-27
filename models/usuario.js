@@ -17,11 +17,13 @@ module.exports = (sequelize, DataTypes) => {
       Usuario.hasMany(models.Muestra, {as: 'receptor'});
     }
     getFormattedDate(fecha) {
-      const date = new Date(fecha);
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate()+1;
-      return `${day}/${month}/${year}`;
+      if (!(fecha instanceof Date) || isNaN(fecha)) {
+          return 'Fecha inválida';
+      }
+      const dia = fecha.getDate().toString().padStart(2, '0');
+      const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+      const año = fecha.getFullYear();
+      return `${dia}-${mes}-${año}`;
     }
   }
   Usuario.init({

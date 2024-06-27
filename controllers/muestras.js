@@ -1,5 +1,6 @@
 const Muestra= require('../models').Muestra;
 const Tipo= require('../models').Tipo;
+const EstadoMuestra= require('../models').EstadoMuestra;
 const Orden= require('../models').Orden;
 const Usuario= require('../models').Usuario;
 const Paciente= require('../models').Paciente;
@@ -16,13 +17,13 @@ exports.listar= async (req, res) => {
     }
     const usuario= await Usuario.findOne({where:{email: email}});
     const muestras= await Muestra.findAll({
-        include: [{ model: Orden, include: [Paciente] }, Tipo],
+        include: [{ model: Orden, include: [Paciente] }, Tipo, EstadoMuestra],
         where: {ordenId: req.params.id}
     });
     res.render('./muestras/', {
         title: 'Etiquetas de Muestras',
         muestras: muestras,
-        usuario: usuario
+        usuario: usuario,  
     });
 };
 
@@ -31,7 +32,7 @@ exports.crear= async (req, res) => {
     const usuario= await Usuario.findOne({where:{email: req.session.usuario}});
     const muestra= await Muestra.create({
         tipoId: req.body.tipoId,
-        estado: req.body.estado,
+        estadoMuestraId: req.body.estado,
         usuarioId: usuario.id,
         ordenId: id
     });
@@ -49,13 +50,13 @@ exports.crear= async (req, res) => {
 exports.actualizar= async (req, res) => {
     const id= req.params.id;
     await Muestra.update({
-        estado: req.body.estado,
+        estadoMuestraId: req.body.estado,
         usuarioId: req.session.usuario
     },{
         where: {id: id}
     });
     const muestras= await Muestra.findAll({
-        include: [Tipo,Usuario,Orden,Paciente]
+        include: [Tipo,Usuario,Orden,Paciente,EstadoMuestra]
     });
     res.render('./muestras/', {
         title: 'Gestion de Muestras',

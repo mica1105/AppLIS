@@ -14,18 +14,24 @@ module.exports = (sequelize, DataTypes) => {
       Muestra.belongsTo(models.Usuario);
       Muestra.belongsTo(models.Orden);
       Muestra.hasMany(models.Detalle);
+      Muestra.belongsTo(models.EstadoMuestra);
     }
     getFormattedDate(fecha) {
-      return `${fecha.getDate().toString().padStart(2, '0')}-${(fecha.getMonth() + 1).toString().padStart(2, '0')}-${fecha.getFullYear()}`;
+      if (!(fecha instanceof Date) || isNaN(fecha)) {
+          return 'Fecha inválida';
+      }
+      const dia = fecha.getDate().toString().padStart(2, '0');
+      const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+      const año = fecha.getFullYear();
+      return `${dia}-${mes}-${año}`;
     }
   }
   Muestra.init({
     tipoId: DataTypes.INTEGER,
-    estado: DataTypes.BOOLEAN,
+    estadoMuestraId: DataTypes.INTEGER,
     fecha: DataTypes.DATE,
     usuarioId: DataTypes.INTEGER,
-    ordenId: DataTypes.INTEGER,
-    etiqueta: DataTypes.STRING
+    ordenId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Muestra',

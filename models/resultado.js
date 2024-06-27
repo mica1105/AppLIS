@@ -9,23 +9,33 @@ module.exports = (sequelize, DataTypes) => {
       Resultado.belongsTo(models.Detalle);
       Resultado.belongsTo(models.Determinacion);
     }
+    getFormattedDate(fecha) {
+      if (!(fecha instanceof Date) || isNaN(fecha)) {
+          return 'Fecha inválida';
+      }
+      const dia = fecha.getDate().toString().padStart(2, '0');
+      const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+      const año = fecha.getFullYear();
+      return `${dia}-${mes}-${año}`;
+    }
   }
   Resultado.init({
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     usuarioId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
     fecha: {
       type: DataTypes.DATE,
-      allowNull: true
+      allowNull: false
     },
     modificacion: {
       type: DataTypes.DATE,
       allowNull: true
-    },
-    detalleId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
     },
     determinacionId: {
       type: DataTypes.INTEGER,
@@ -33,7 +43,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     valor: {
       type: DataTypes.FLOAT,
-      allowNull: true
+      allowNull: false
+    },
+    detalleId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     sequelize,

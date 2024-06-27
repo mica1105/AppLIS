@@ -9,14 +9,14 @@ router.get('/',estaAutenticado, esAdmin, UsuarioController.listar);
 
 router.get('/perfil',estaAutenticado, UsuarioController.perfil);
 
-router.get('/crear', UsuarioController.formCrear);
+router.get('/crear', estaAutenticado,esAdmin, UsuarioController.formCrear);
 
-router.post('/', UsuarioController.agregar);
+router.post('/',estaAutenticado,esAdmin, UsuarioController.agregar);
 
-router.get('/:id',estaAutenticado, UsuarioController.formActualizar);
+router.get('/:id',estaAutenticado,esAdmin, UsuarioController.formActualizar);
 
-router.put('/:id',estaAutenticado, UsuarioController.actualizar);
+router.put('/:id',estaAutenticado,esAdmin, UsuarioController.actualizar);
 
-router.delete('/:id',estaAutenticado, UsuarioController.borrar);
+router.delete('/:id',estaAutenticado,esAdmin, UsuarioController.borrar);
 
 module.exports = router;

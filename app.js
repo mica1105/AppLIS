@@ -14,6 +14,7 @@ var examenesRouter = require('./routes/examenes');
 var ordenesRouter = require('./routes/ordenes');
 var muestrasRouter = require('./routes/muestras');
 var resultadosRouter= require('./routes/resultados');
+var detallesRouter = require('./routes/detalles');
 
 var app = express();
 
@@ -41,6 +42,7 @@ app.use('/examenes', examenesRouter);
 app.use('/ordenes', ordenesRouter);
 app.use('/muestras', muestrasRouter);
 app.use('/resultados', resultadosRouter);
+app.use('/detalles', detallesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

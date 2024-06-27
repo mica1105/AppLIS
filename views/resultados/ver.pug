@@ -1,85 +1,134 @@
-extends ../layout
-
+extends ../layout  
 block content
     .container(style="margin-top:25px")
-        .row
+        .row.justify-content-center
+            .col-md-10
                 .card
-                    .card-header
-                        h1= 'Resultados de '+ detalle.Examen.nombre+ ' Orden Nro: '+detalle.ordenId
-                    .card-body            
+                    if detalle
+                        .card-header.text-center
+                            h2= 'Resultados de ' + detalle.Examen.nombre + ' Orden Nro: ' + detalle.ordenId
+                            form.text-end(action='/resultados/' + detalle.id + "?_method=DELETE", method="post")
+                                input.btn.btn-danger(value="Eliminar", type="submit")
+                    if orden
+                        .card-header.text-center
+                            h2= 'Resultados de laboratorio Orden Nro: ' + orden.id
+                    .card-body
+                        if mensaje
+                            .alert.alert-dismissible(
+                                class=(codigo === 'success' ? 'alert-success' : 'alert-danger'),
+                                role="alert"
+                            )
+                                i(class=(codigo === 'success' ? 'fa fa-check-circle-o fa-2x' : 'fa fa-exclamation-triangle fa-2x'))
+                                span= mensaje
                         .row
-                            table.table.table-borderless
-                                thead
-                                    tr
-                                        th Nro
-                                        th Determinacion
-                                        th Valor
-                                        th Unidad
-                                        th Referencia
-                                        th Acciones
-                                tbody
-                                    each resultado in resultados
-                                        tr  
-                                            td= resultado.id
-                                            td= resultado.Determinacion.dato
-                                            td= resultado.valor
-                                            td= resultado.Determinacion.medida
-                                            td
-                                                ul
-                                                    each ref in resultado.Determinacion.Referencia 
-                                                        if(ref.edad != null)
-                                                            li  En #{ref.edad} , valor min: #{ref.min}  , valor max: #{ref.max} 
-                                                        if(ref.sexo != null)
-                                                            li En sexo {ref.sexo}, valor min: #{ref.min}  valor max: #{ref.max} 
-                                                        if(ref.edad == null && ref.sexo == null)
-                                                            li Valor min: #{ref.min} , valor max: #{ref.max} 
-                                                        else
-                                                            li En #{ref.edad} y sexo #{ref.sexo}, valor min: #{ref.min} , valor max: #{ref.max} 
-                                            td
-                                                button.btn.btn-primary(data-bs-toggle="modal", data-bs-target="#editarModal", data-bs-id=resultado.id, data-bs-valor=resultado.valor, data-bs-det=resultado.Determinacion.dato) Editar
-                                            td
-                                                form(action='/resultados/ver/'+ resultado.id+"?_method=DELETE", method="post")
-                                                    input.btn.btn-danger(value="Eliminar",type="submit")
-                            .row
-                                .col-md-12.text-center
-                                    a.btn.btn-danger.btn-lg.me-2(href= orden ? '/resultados/gestion/'+detalle.ordenId : '/') Cancelar
+                            .col-md-10
+                                .table-responsive
+                                    table.table.table-bordered.table-hover
+                                        thead
+                                            tr
+                                                th Determinacion
+                                                th Valor
+                                                th Unidad
+                                                th Referencia
+                                                if detalle
+                                                    th Validado
+                                                    if !detalle.validado
+                                                        th Acciones
+                                        tbody
+                                            if (resultados && resultados.length > 0)
+                                                each resultado in resultados
+                                                    tr  
+                                                        td= resultado.Determinacion.dato
+                                                        each ref in resultado.Determinacion.Referencia
+                                                            if (resultado.valor > ref.max)
+                                                                td(style="background-color: red; color: white;")= resultado.valor
+                                                            else if (resultado.valor < ref.min)
+                                                                td(style="background-color: blue; color: white;")= resultado.valor
+                                                            else
+                                                                td(style="background-color: green; color: white;")= resultado.valor 
+                                                        td= resultado.Determinacion.medida
+                                                        td
+                                                            ul.list-unstyled
+                                                                each ref in resultado.Determinacion.Referencia
+                                                                    li
+                                                                        | #{ref.edad ? `En ${ref.edad}, ` : ''}#{ref.sexo ? `Sexo ${ref.sexo}, ` : ''}valor min: #{ref.min}, valor max: #{ref.max}
+                                                        td= detalle.validado ? 'Sí' : 'No'
+                                                        if (!detalle.validado)
+                                                            td
+                                                                button.btn.btn-success(data-bs-toggle="modal", data-bs-target="#editarModal", data-bs-id=resultado.id, data-bs-valor=resultado.valor, data-bs-det= resultado.determinacionId, data-bs-detDato=resultado.Determinacion.dato) Editar
+                                                else
+                                                    tr
+                                                        td(colspan="6") No hay datos
+                                            if (detalles && detalles.length > 0)
+                                                each detalle in detalles
+                                                    each resultado in detalle.Resultados
+                                                        tr  
+                                                            td= resultado.Determinacion.dato
+                                                            td= resultado.valor 
+                                                            td= resultado.Determinacion.medida
+                                                            td
+                                                                ul.list-unstyled
+                                                                    each ref in resultado.Determinacion.Referencia
+                                                                        li
+                                                                            | #{ref.edad ? `En ${ref.edad}, ` : ''}#{ref.sexo ? `Sexo ${ref.sexo}, ` : ''}valor min: #{ref.min}, valor max: #{ref.max}
+                                                else
+                                                    tr
+                                                        td(colspan="4") No hay datos
+                            if resultados
+                                .col-md-2
+                                    .card
+                                        .card-header.text-center
+                                            h6 Referencia
+                                        .card-body.text-center
+                                            p
+                                                i.fa-solid.fa-star(style="color: red;")
+                                                | Valor Elevado
+                                            p
+                                                i.fa-solid.fa-star(style="color: blue;")
+                                                | Valor Bajo
+                                            p
+                                                i.fa-solid.fa-star(style="color: green;")
+                                                | Valor Normal
+                        .row.mt-4
+                            .col-md-12.text-center
+                                a.btn.btn-danger.btn-lg.me-2(href=detalle ? '/resultados/gestion/' + detalle.ordenId : '/pacientes/inicio') Cerrar
+                                if usuario && (usuario.rolId == 1 || usuario.rolId == 3) && !detalle.validado
+                                    form(action=detalles.length > 0 ? '/detalles/' + detalles[0].id + '?_method=PUT' : '/', method="post")
+                                        input.btn.btn-primary(type="submit", value="Validar Resultados")
+                                if paciente
+                                    a.btn.btn-secondary.btn-lg(href='/resultados/informe/'+orden.id) 
+                                        i.fas.fa-regular.fa-file-pdf
+                                        |  Informe
 
-
-        .modal.fade(id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true" data-bs-backdrop="static") 
+        .modal.fade(id="editarModal", tabindex="-1", aria-labelledby="editarModalLabel", aria-hidden="true", data-bs-backdrop="static")
             .modal-dialog.modal-dialog-centered
                 .modal-content
                     .modal-header
                         h3.modal-title Editar Valor
-                        button.btn-close(data-bs-dismiss="modal", aria-label="Close") 
+                        button.btn-close(data-bs-dismiss="modal", aria-label="Close")
                     .modal-body
-                        form(action="/resultados/editar", method="POST")
-                            .mb-3
-                                input(type="hidden", name="resultadoId", id="resultadoId", required)
+                        form(id="formEditar", action="#", method="POST")
                             .mb-3
                                 label.form-label(for="det") Determinacion: 
-                                input.form-control(type="text", name="det", id="det", required, readonly)
-                                br
+                                input.form-control(type="text", name="det", id="det", required readonly)
                             .mb-3
                                 label.form-label(for="valor") Valor: 
                                 input.form-control(type="text", name="valor", id="valor", required)
-
                             .mb-3.text-end
                                 button.btn.btn-success(type="submit") Guardar
-            
-
         script.
             document.addEventListener('DOMContentLoaded', function() {
-                let editarModal = document.getElementById('editarModal')
+                let editarModal = document.getElementById('editarModal');
                 editarModal.addEventListener('show.bs.modal', function(event) {
-                    let button = event.relatedTarget
-                    let id = button.getAttribute('data-bs-id')
-                    let valor = button.getAttribute('data-bs-valor')
-                    let det= button.getAttribute('data-bs-det')
-                    let inputResultadoId = editarModal.querySelector('.modal-body #resultadoId')
-                    let inputValor = editarModal.querySelector('.modal-body #valor')
-                    let inputDet = editarModal.querySelector('.modal-body #det')
-                    inputResultadoId.value = id
-                    inputValor.value = valor
-                    inputDet.value = det
-                })
-            })
+                    let button = event.relatedTarget;
+                    let id = button.getAttribute('data-bs-id');
+                    let valor = button.getAttribute('data-bs-valor');
+                    let det = button.getAttribute('data-bs-det');
+                    let detDato = button.getAttribute('data-bs-detDato');
+                    let inputValor = editarModal.querySelector('.modal-body #valor');
+                    let inputDet = editarModal.querySelector('.modal-body #det');
+                    document.getElementById('formEditar').action = '/resultados/' + id + '/' + det + '?_method=PUT';
+                    inputValor.value = valor;
+                    inputDet.value = detDato;
+                });
+            });

@@ -22,3 +22,17 @@ exports.borrar= async (req, res) => {
     await detalle.destroy();
     res.redict('/ordenes/'+detalle.ordenId);
 }
+
+exports.actualizar= async (req, res) => {
+    try{
+        const id= req.params.id;
+        const detalle= await Detalle.findByPk(id);
+        await detalle.update({
+            validado: true,
+        });
+        res.redirect('/resultados/'+detalle.id);
+    } catch (error) {
+        console.error('Error al actualizar detalle:', error);
+        res.status(500).send('Error al actualizar detalle');
+    }
+}
