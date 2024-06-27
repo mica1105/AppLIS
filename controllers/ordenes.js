@@ -36,7 +36,7 @@ exports.formCrear= async (req, res) => {
     res.render('./ordenes/crear', {
         title: 'Crear orden',
         usuario: usuario,
-        paciente:paciente,
+        pacienteP:paciente,
         todosExamenes:todosExamenes,
         tiposMuestras:Tipos
     });
@@ -61,7 +61,7 @@ exports.agregar= async (req, res) => {
             fechaResultado: fEntrega 
         });
 
-        res.redirect('./ordenes/actualizar/'+orden.id);
+        res.redirect('/ordenes/actualizar/'+orden.id);
 
     } catch (error) {
         console.error('Error al agregar orden:', error);

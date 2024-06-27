@@ -47,7 +47,7 @@ exports.detalles= async(req,res)=> {
         title: "Gestion de Resultados de Examenes",
         detalles: detalles,
         orden: orden,
-        paciente: paciente,
+        pacienteO: paciente,
         usuario: usuario
     });
 };
@@ -70,33 +70,42 @@ exports.formVerResultados= async (req, res) => {
 }
 
 exports.cargarResultado= async (req, res) => {
-    const ordenId= req.params.ordenId;
-    const detalleId= req.params.detalleId;
-    const resultados= await Resultado.findAll({where: {ordenId: ordenId, detalleId: detalleId}});
-    if(resultados && resultados.length > 0){
-        
-        const err = new Error('El detalle ya tiene resultados cargados, ingresar a ver resultados para comprobarlos');
-        err.status = 405; 
-        next(err);
+    try {
+        const ordenId = req.params.ordenId;
+        const detalleId = req.params.detalleId;
 
+        const detalle = await Detalle.findByPk(detalleId);
+        const resultados = await Resultado.findAll({ where: { detalleId: detalleId } });
+
+        if (resultados.length > 0) {
+            res.status(400).send('Ya hay resultados cargados para este detalle.');
+        } else {
+            
+            const examen = await Examen.findOne({
+                where: { id: detalle.examenId },
+                include: [{ model: Determinacion, include: [Referencia] }]
+            });
+            const orden = await Orden.findOne({
+                where: { id: ordenId },
+                include: [Paciente]
+            });
+
+            res.render('./resultados/cargar', {
+                title: 'Resultados de Examenes',
+                examen: examen,
+                detalle: detalle,
+                orden: orden
+            });
+        }
+    } catch (error) {
+        console.error('Error al cargar resultados:', error);
+        res.status(500).send('Error al cargar resultados');
     }
-    const detalle= await Detalle.findByPk(detalleId);
-    const examen= await Examen.findOne({where:{id: detalle.examenId},  include: [{ model: Determinacion, include: [Referencia] }]});
-    const orden= await Orden.findOne({where:{id: ordenId}, include: [Paciente] });
-    res.render('./resultados/cargar', {
-        title: 'Resultados de Examenes',
-        examen: examen,
-        detalle: detalle,
-        orden: orden
-    });
 };
 
 exports.agregar = async (req, res) => {
     try {
-        // Busca al usuario por su email en la sesión
         const usuario = await Usuario.findOne({ where: { email: req.session.usuario } });
-
-        // Extrae los datos necesarios del cuerpo de la solicitud
         const ordenId = req.body.ordenId;
         const detalleId = req.body.detalleId;
         const cantResultados = req.body.cant;
@@ -124,7 +133,6 @@ exports.agregar = async (req, res) => {
         // Espera a que se completen todas las promesas de creación de resultados
         await Promise.all(promesas);
 
-        // Redirige a la página de detalles de resultados
         res.redirect(`/resultados/gestion/${ordenId}`);
     } catch (error) {
         console.error('Error al agregar resultados:', error);

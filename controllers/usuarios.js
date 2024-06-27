@@ -58,7 +58,8 @@ exports.agregar= async (req, res) => {
         title: 'Gestion de Usuario',
         usuarios:usuarios,
         codigo: 'success',
-        mensaje: 'Usuario Creado'
+        mensaje: 'Usuario Creado',
+        usuario: usuario
     });
 };
 
@@ -91,7 +92,8 @@ exports.actualizar= async (req, res) => {
         title: 'Gestion de Usuario',
         usuarios:usuarios,
         codigo: 'success',
-        mensaje: 'Usuario NRO: '+ usuario.id +' Actualizado'
+        mensaje: 'Usuario NRO: '+ usuario.id +' Actualizado',
+        usuario: usuario
     });    
 }
 
@@ -104,7 +106,8 @@ exports.borrar= async (req, res) => {
         title: 'Gestion de Usuario',
         usuarios:usuarios,
         codigo: 'error',
-        mensaje: 'Usuario Borrado'
+        mensaje: 'Usuario Borrado',
+        usuario: usuario
     });
 };
 

@@ -39,8 +39,10 @@ exports.agregarADetalle= async (req, res) => {
 };
 
 exports.formCrear= async (req, res) => {
+    const usuario= await Usuario.findOne({where:{email: req.session.usuario}});
     res.render('./examenes/crear', {
-        title: 'Crear Nuevo Examen'
+        title: 'Crear Nuevo Examen',
+        usuario: usuario
     });
 };
 
@@ -57,10 +59,12 @@ exports.formActualizar= async (req, res) => {
     const id= req.params.id;
     const examen= await Examen.findByPk(id);
     const determinaciones = await Determinacion.findAll({include:[Referencia], where: {examenId: id}});
+    usuario= await Usuario.findOne({where:{email: req.session.usuario}});
     res.render('./examenes/crear', {
         title: 'Examen',
         examen: examen,
-        determinaciones: determinaciones
+        determinaciones: determinaciones,
+        usuario: usuario
     });
 }
 

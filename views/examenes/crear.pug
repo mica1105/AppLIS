@@ -13,13 +13,14 @@ block content
                                 - var url = examen ? examen.id+"?_method=PUT" : "";
                                 form.row.g-3(action="./"+url, method="POST")
 
-                                    .col-md-12
+                                    .col-md-6
                                         label.form-label(for="nombre") Nombre de Examen:
                                         input.form-control(type="text",required ,name="nombre", value=examen ? examen.nombre : "")
 
-                                    .col-md-12
+                                    .col-md-6
                                         label.form-label(for="dispobible") Disponible:
-                                        select.form-select(name="dispobible")
+
+                                        select.form-select(name="dispobible",disabled= examen ? true : false)
                                             each disponible in [{val: 1, text: "Si"}, {val: 0, text: "No"}]
                                                 if (examen && examen.disponible == disponible.val)
                                                     option(value=disponible.val, selected="true") #{disponible.text}

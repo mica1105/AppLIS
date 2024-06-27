@@ -46,9 +46,10 @@ exports.inicio= async (req,res)=>{
         email= req.user[0].email;
     }
     const paciente= await Paciente.findOne({where:{email: email}});
-    const ordenes= await Orden.findAll({include: [Estado]},{
-        where:{pacienteId: paciente.id},
-    });
+    const ordenes = await Orden.findAll({
+        where: { pacienteId: paciente.id },
+        include: [Estado]
+    });    
 
     res.render('./pacientes/inicial', {
         title: 'Portal Paciente',
